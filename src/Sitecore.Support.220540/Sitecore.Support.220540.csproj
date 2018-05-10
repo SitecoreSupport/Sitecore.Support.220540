@@ -80,6 +80,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <Content Include="Views\Form\EditorTemplates\FormViewModel.cshtml" />
     <None Include="web.config" />
   </ItemGroup>
   <PropertyGroup>

@@ -22,5 +22,10 @@ namespace Sitecore.Support.Forms.Mvc.Data.Wrappers
     {
       return sitecoreDatabase.GetItem(id);
     }
+
+    public Item GetItem(ID id, Globalization.Language language)
+    {
+      return sitecoreDatabase.GetItem(id, language);
+    }
   }
 }

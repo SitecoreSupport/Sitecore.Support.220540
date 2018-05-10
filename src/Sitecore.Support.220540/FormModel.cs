@@ -6,6 +6,7 @@ using Sitecore.Forms.Core.Data;
 using Sitecore.Forms.Mvc.Interfaces;
 using Sitecore.Links;
 using Sitecore.Resources.Media;
+using Sitecore.SecurityModel;
 using Sitecore.Text;
 using Sitecore.Web;
 using Sitecore.WFFM.Abstractions.Actions;
@@ -13,7 +14,6 @@ using Sitecore.WFFM.Abstractions.Data;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Runtime.CompilerServices;
 
 namespace Sitecore.Support.Forms.Mvc.Models
 {
@@ -68,12 +68,29 @@ namespace Sitecore.Support.Forms.Mvc.Models
           {
             if (successPage.TargetItem == null)
             {
-              throw new NullReferenceException("Redirect item is null");
+              Log.Error("[WFFM] [Sitecore.Support.220540] Redirect item is null", new NullReferenceException(), this);
+              //throw new NullReferenceException("Redirect item is null");
             }
             string linkType = successPage.LinkType;
             if (linkType != null)
             {
-              if (linkType == "internal")
+              if (linkType != "internal" && linkType == "media")
+              {
+                str = new UrlString(MediaManager.GetMediaUrl(new MediaItem(successPage.TargetItem)));
+              }
+              else if (!successPage.TargetID.IsNull)
+              {
+                UrlOptions defaultUrlOptions = LinkManager.GetDefaultUrlOptions();
+                defaultUrlOptions.Language = item.Language;
+                defaultUrlOptions.SiteResolving = Settings.Rendering.SiteResolving;
+                Item item2 = default(Item);
+                using (new SecurityDisabler())
+                {
+                  item2 = item.Database.Items[successPage.TargetID];
+                }
+                str = new UrlString(LinkManager.GetItemUrl(item2, defaultUrlOptions));
+              }
+              /*if (linkType == "internal")
               {
                 UrlOptions defaultUrlOptions = LinkManager.GetDefaultUrlOptions();
                 defaultUrlOptions.SiteResolving = Settings.Rendering.SiteResolving;
@@ -82,7 +99,7 @@ namespace Sitecore.Support.Forms.Mvc.Models
               else if (linkType == "media")
               {
                 str = new UrlString(MediaManager.GetMediaUrl(new MediaItem(successPage.TargetItem)));
-              }
+              }*/
             }
           }
           if (str != null)

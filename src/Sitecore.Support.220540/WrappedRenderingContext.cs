@@ -1,5 +1,4 @@
-﻿using Sitecore;
-using Sitecore.Data;
+﻿using Sitecore.Data;
 using Sitecore.Data.Items;
 using Sitecore.Form.Core.Configuration;
 using Sitecore.Forms.Mvc.Data.Wrappers;
@@ -30,9 +29,9 @@ namespace Sitecore.Support.Forms.Mvc.Data.Wrappers
       {
         if (RenderingContext.CurrentOrNull != null)
         {
-          return new WrappedDatabase(RenderingContext.CurrentOrNull.PageContext.Database);
+          return new Sitecore.Support.Forms.Mvc.Data.Wrappers.WrappedDatabase(RenderingContext.CurrentOrNull.PageContext.Database);
         }
-        return new WrappedDatabase(Context.Database);
+        return new Sitecore.Support.Forms.Mvc.Data.Wrappers.WrappedDatabase(Context.Database);
       }
     }
 
